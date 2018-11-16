@@ -96,16 +96,21 @@ mycursor = mydb.cursor()
 
 
 
-userPrompt = input("Username?: (or '+' to create new user")
+userPrompt = input("Username? (or '+' to create new user): ")
 
 if (userPrompt == "+"):
     newUser = input("New username: ")
     mycursor.execute("select exists(select * from user where username = %s)", (newUser,))
     rs = mycursor.fetchone()
-    if (rs == 1):
+    if rs[0] == 1:
         print ("User already exists. Exiting program.")
+        exit()
     else:
-        mycursor.execute("insert into user ")
+        newPass = getpass.getpass("New Password: ")
+        newPass = bcrypt.hashpw(newPass.encode(), bcrypt.gensalt())
+        mycursor.execute("insert into user (username, pwd_hash) values (%s, %s)", (newUser, newPass))
+        mydb.commit()
+        userPrompt = newUser
 
 mycursor.execute("Select * from user where username = %s", (userPrompt,))
 rs = mycursor.fetchone()
