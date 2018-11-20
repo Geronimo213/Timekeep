@@ -61,7 +61,7 @@ def changeHours(project, connection):
 def changeName(project, connection):
     project.name = input("New name: ")
     cursor = connection.cursor()
-    cursor.execute("update project set name = %s where project_id = %s", (project.name, project.id))
+    cursor.execute("update project set project_name = %s where project_id = %s", (project.name, project.id))
     connection.commit()
     cursor.close()
 
@@ -87,7 +87,7 @@ def refresh(connection):
 mydb = mysql.connector.connect(
 
     host="cs4337.cms3bxdslek4.us-east-2.rds.amazonaws.com",
-    user="admin",
+    user="application",
     passwd="Aioplk4231!01",
     database="mydb"
 )
